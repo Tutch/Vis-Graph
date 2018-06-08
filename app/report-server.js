@@ -11,7 +11,7 @@ class ReportServer {
             console.log(`im alive at port ${port}`);
         })
 
-        app.get('/report/rule-violations', (req, res) => {
+        app.get('/reports/rule-violations', (req, res) => {
             res.send(this.reports['rule-violations']);
         });
     }
