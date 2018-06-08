@@ -1,2 +1,9 @@
 # Vis-Graph
-WIP
+Projetinho Node. WIP.
+
+## Setup
+npm install
+
+## Dependências
+- Node.js
+- npm
