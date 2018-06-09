@@ -5,16 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Graph</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/style.css" />
     <script src="./src/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 </head>
 <body>
     <div id="app">
-        {{ message }}
-        <rule-graph></rule-graph>
+        <pick-rule 
+            :items="violation_headers" 
+            @violation-rule-picked="ruleFromPickRule">
+        </pick-rule>
+        <rule-graph 
+            :violations="violations_from_rule">
+        </rule-graph>
     </div>
     
-        <script src="./src/main.js"></script>
+    <script src="./src/main.js"></script>
 </body>
 </html>
