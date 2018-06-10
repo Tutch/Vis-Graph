@@ -29,22 +29,25 @@ Vue.component('rule-graph', {
     `,
     watch: {
         violations: function() {
-            var nodes = new vis.DataSet([
-                {id: 1, label: 'Node 1'},
-                {id: 2, label: 'Node 2'},
-                {id: 3, label: 'Node 3'},
-                {id: 4, label: 'Node 4'},
-                {id: 5, label: 'Node 5'}
-            ]);
-        
-            // create an array with edges
-            var edges = new vis.DataSet([
-                {from: 1, to: 3},
-                {from: 1, to: 2},
-                {from: 2, to: 4},
-                {from: 2, to: 5}
-            ]);
-        
+            // Recebi uma nova regra!
+            this.loadGraph();
+        }
+    },
+    methods: {
+        loadGraph: function() {
+            console.log(this.violations);    
+
+            var nodes = new vis.DataSet([]);
+            var edges = new vis.DataSet([]);
+
+            // id dos nodos no grafo
+            let nodes_in_graph = [];
+            let edges_in_graph = [];
+
+            this.violations.forEach(v => {
+               this.insertViolation(v, nodes_in_graph, edges_in_graph, nodes, edges);
+            });
+
             // create a network
             var container = document.getElementById('rule-graph');
         
@@ -59,12 +62,82 @@ Vue.component('rule-graph', {
                 height:'100%',
                 width:'100%',
                 physics: {
-                   enabled: false 
+                   enabled: true 
+                },
+                nodes: {
+                    shape: 'box',
+                    margin: 10
+                },
+                edges: {
+                    arrows:'to',
+                    length: 300
                 }
             };
         
             // initialize your network!
             var network = new vis.Network(container, data, options);
+        },
+        createOriginNode: function(violation) {
+            return {
+                id: violation['FomUnit Id'], 
+                label: violation['FomUnit Id']
+            }
+        },
+        createTargetNode: function(violation) {
+            return {
+                id: violation['ToUnit Id'], 
+                label: violation['ToUnit Id']
+            }
+        },
+        createEdge: function(origin_id, target_id, current_edges, violation, vis_edges) {
+            let violation_type = violation['Violation Kind'];
+            let newedge = {
+                from:origin_id, 
+                to:target_id, 
+                type:violation_type
+            };
+
+            if(!this.checkIfEdgeExists(newedge, current_edges)) {
+                vis_edges.add({
+                    from:origin_id, 
+                    to:target_id,
+                    color: {
+                        color: ViolationTypes[violation_type].color
+                    }
+                });
+                current_edges.push(newedge);
+            }
+
+            console.log(current_edges);
+        },
+        checkIfEdgeExists: function(edge, edge_list) {
+            for(let i=0; i<edge_list.length; i++) {
+                let index_edge = edge_list[i];
+
+                if(index_edge.from == edge.from &&
+                   index_edge.to == edge.to &&
+                   index_edge.type == edge.type) {
+                    return true;       
+                }
+            }
+
+            return false;
+        },
+        insertViolation: function(violation, current_nodes, current_edges, vis_nodes, vis_edges) {
+            let origin = this.createOriginNode(violation);    
+            let target = this.createTargetNode(violation);
+
+            if(!current_nodes.includes(origin.id)) {
+                vis_nodes.add(origin)
+                current_nodes.push(origin.id);
+            }
+
+            if(!current_nodes.includes(target.id)) {
+                vis_nodes.add(target)
+                current_nodes.push(target.id);
+            }
+
+            this.createEdge(origin.id, target.id, current_edges, violation, vis_edges);
         }
     }
 })
@@ -85,7 +158,7 @@ var app = new Vue({
             this.$http.get('http://localhost:6060/reports/rule-violations')
             .then(response => {
                 this.rule_violations = JSON.parse(response.bodyText); 
-                this.violation_headers = Object.keys(JSON.parse(response.bodyText));    
+                this.violation_headers = Object.keys(JSON.parse(response.bodyText));
             })
             .catch(error => {
                 console.log(error.statusText)
