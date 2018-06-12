@@ -1,3 +1,39 @@
+// Legenda do gráfico
+Vue.component('graph-legend', {
+    props:[],
+    template:`
+        <legend>
+            <div id="legend-box">
+                <h4>Criticality</h4>
+                <div class="legend-wrapper" id="legend-crit">
+                    <span>Lower</span>
+                    <div id ="legend-square-wrapper">
+                        <div class="legend-square crit-low"></div>
+                        <div class="legend-square crit-medium"></div>
+                        <div class="legend-square crit-high"></div>
+                        <div class="legend-square crit-extreme"></div>
+                    </div>
+                    <span>Higher</span>
+                </div>
+            </div>
+            <div id="legend-box">
+                <h4>Violations</h4>
+                <div class="legend-wrapper" id="legend-violations">
+                    <div>
+                        <dt><hr class="signaling"/></dt><dd>Signaling</dd>
+                    </div>
+                    <div>
+                        <dt><hr class="throwing"/></dt><dd>Throwing</dd>
+                    </div>
+                    <div>
+                        <dt><hr class="handling"/></dt><dd>Handling</dd>
+                    </div>
+                </div>
+            </div>
+        </legend>
+    `
+})
+
 // Selecionar regra
 Vue.component('pick-rule', {
     props: ['items'],
