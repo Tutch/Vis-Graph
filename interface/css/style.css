@@ -4,9 +4,13 @@
     border: 1px solid black;
 }
 
+div.vis-network {
+    background-color: #f7f7f7;
+  }
+
 legend {
     background-color: white;
-    width: 20%;
+    width: 100%;
     height: 80px;
 }
 
@@ -16,37 +20,29 @@ legend h4 {
     margin: 0 0 5% 0;
 }
 
-#legend-crit span {
-    display: inline-block;
-    width: 25%;
-    text-align: center;
-    font-size: 0.9em;
-}
-
-#legend-crit span:nth-child(1) {
+#legend-box {
+    width: 20%;
+    height: 100%;
+    padding: 0.5%;
     float:left;
 }
 
-#legend-crit span:nth-child(2) {
-    float:right;
-}
-
-#legend-box {
-    width: 80%;
-    height: 100%;
-    margin: 0 auto;
-    padding: 5%;
-}
-
-#legend-crit {
+#legend-wrapper {
     width: 100%;
     margin: 0 auto;
+}
+
+#legend-crit span {
+    width: 25%;
+    text-align: center;
+    font-size: 0.9em;
+    float:left;
 }
 
 #legend-square-wrapper {
     display:block;
     width: 50%;
-    margin: 0 auto;
+    float:left;
 }
 
 .legend-square {
@@ -71,4 +67,48 @@ legend h4 {
 
 .crit-extreme {
     background-color: red;
+}
+
+#legend-violations div {
+    float:left;
+    width:33%;
+}
+
+dt {
+    width: 20%;
+    height: 15px;
+    float: left;
+    clear: left;
+    margin-bottom: 10px;
+}
+
+dt, dd {
+    display: inline-block;
+    height: 15px;
+}
+
+dd {
+    margin: 0;
+    font-size:0.9em;
+    padding-left: 15px;
+    margin-bottom: 10px;
+    width: 55%;
+}
+
+dt hr{
+    border: 0;
+    border-bottom: 3px solid;
+    border-color: black;
+}
+
+.handling {
+    border-style: solid;
+}
+
+.throwing {
+    border-style: dashed;
+}
+
+.signaling {
+    border-style: dotted;
 }
