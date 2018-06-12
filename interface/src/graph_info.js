@@ -1,14 +1,14 @@
 var Throughtput = {
     low: {
         cut:0.20,
-        factor:1
+        factor:2
     },
     medium: {
-        factor:3
+        factor:2
     },
     high: {
         cut:0.3,
-        factor:6
+        factor:2
     }
 }
 
