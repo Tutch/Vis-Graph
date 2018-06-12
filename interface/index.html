@@ -17,8 +17,24 @@
             @violation-rule-picked="ruleFromPickRule">
         </pick-rule>
         <rule-graph 
-            :violations="violations_from_rule">
+            :violations="violations_from_rule"
+            :divisions="divisions">
         </rule-graph>
+        <legend>
+            <div id="legend-box">
+                <h4>Criticality</h4>
+                <div id="legend-crit">
+                    <span>Lower</span>
+                    <div id ="legend-square-wrapper">
+                        <div class="legend-square crit-low"></div>
+                        <div class="legend-square crit-medium"></div>
+                        <div class="legend-square crit-high"></div>
+                        <div class="legend-square crit-extreme"></div>
+                    </div>
+                    <span>Higher</span>
+                </div>
+            </div>
+        </legend>
     </div>
     
     <script src="./src/graph_info.js"></script>

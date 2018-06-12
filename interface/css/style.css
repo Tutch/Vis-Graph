@@ -3,3 +3,72 @@
     height:480px;
     border: 1px solid black;
 }
+
+legend {
+    background-color: white;
+    width: 20%;
+    height: 80px;
+}
+
+legend h4 {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin: 0 0 5% 0;
+}
+
+#legend-crit span {
+    display: inline-block;
+    width: 25%;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+#legend-crit span:nth-child(1) {
+    float:left;
+}
+
+#legend-crit span:nth-child(2) {
+    float:right;
+}
+
+#legend-box {
+    width: 80%;
+    height: 100%;
+    margin: 0 auto;
+    padding: 5%;
+}
+
+#legend-crit {
+    width: 100%;
+    margin: 0 auto;
+}
+
+#legend-square-wrapper {
+    display:block;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.legend-square {
+    float: left;
+    width: 25%;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+.crit-low {
+    background-color: yellow;
+}
+
+.crit-medium {
+    background-color: orange;
+}
+
+.crit-high {
+    background-color: orangered;
+}
+
+.crit-extreme {
+    background-color: red;
+}

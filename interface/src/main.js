@@ -1,11 +1,6 @@
 // Selecionar regra
 Vue.component('pick-rule', {
     props: ['items'],
-    data() {
-        return {
-            choosenRule:''
-        }
-    },
     template: `
         <div>
             <select v-model="choosenRule" @change="pickedRule">
@@ -14,6 +9,11 @@ Vue.component('pick-rule', {
             </select>
         </div>
     `,
+    data() {
+        return {
+            choosenRule:''
+        }
+    },
     methods: {
         pickedRule: function() {
             this.$emit('violation-rule-picked', this.choosenRule);
@@ -23,7 +23,7 @@ Vue.component('pick-rule', {
 
 // Gráfico
 Vue.component('rule-graph', {
-    props: ['violations'],
+    props: ['violations','divisions'],
     template: `
         <div id="rule-graph"></div>
     `,
@@ -48,6 +48,8 @@ Vue.component('rule-graph', {
                this.insertViolation(v, nodes_in_graph, edges_in_graph, nodes, edges);
             });
 
+            console.log(edges_in_graph);
+
             // create a network
             var container = document.getElementById('rule-graph');
         
@@ -70,12 +72,16 @@ Vue.component('rule-graph', {
                 },
                 edges: {
                     arrows:'to',
-                    length: 300
+                    length: 500
                 }
             };
         
             // initialize your network!
             var network = new vis.Network(container, data, options);
+            
+            network.on("stabilizationIterationsDone", function () {
+                network.setOptions( { physics: false } );
+            });
         },
         createOriginNode: function(violation) {
             return {
@@ -91,6 +97,21 @@ Vue.component('rule-graph', {
         },
         createEdge: function(origin_id, target_id, current_edges, violation, vis_edges) {
             let violation_type = violation['Violation Kind'];
+            let criticality = violation['Criticality'];
+            let throughtput = null;
+
+            if(this.violations.length < this.divisions.low) {
+                throughtput = Throughtput.low;
+            }else if(this.violations.length > this.divisions.high) {
+                throughtput = Throughtput.high;
+            }else {
+                throughtput = Throughtput.medium;
+            }
+
+            violation_type = ViolationTypes[violation_type]
+            line = [violation_type.dash * throughtput.factor, 
+                    violation_type.gap * throughtput.factor];
+
             let newedge = {
                 from:origin_id, 
                 to:target_id, 
@@ -102,13 +123,14 @@ Vue.component('rule-graph', {
                     from:origin_id, 
                     to:target_id,
                     color: {
-                        color: ViolationTypes[violation_type].color
-                    }
+                        color: Criticality[criticality].color
+                    },
+                    arrowStrikethrough: false,
+                    dashes: line,
+                    width: throughtput.factor
                 });
                 current_edges.push(newedge);
             }
-
-            console.log(current_edges);
         },
         checkIfEdgeExists: function(edge, edge_list) {
             for(let i=0; i<edge_list.length; i++) {
@@ -122,6 +144,9 @@ Vue.component('rule-graph', {
             }
 
             return false;
+        },
+        buildBoxText: function() {
+            
         },
         insertViolation: function(violation, current_nodes, current_edges, vis_nodes, vis_edges) {
             let origin = this.createOriginNode(violation);    
@@ -149,16 +174,28 @@ var app = new Vue({
         violations_from_rule: [],
         rule_violations: [],
         violation_headers: [],
+        divisions: {low:0,high:0}
     },
     created() {
        this.getRuleViolations();
     },
     methods: {
+        calculateDivisions: function(violations) {
+            let max = 0;
+            Object.keys(violations).forEach(rule => {
+                if(violations[rule].length > max) {
+                    max = violations[rule].length;
+                }
+            });
+            this.divisions.low = Math.floor(Throughtput.low.cut * max);
+            this.divisions.high = Math.floor(max - Throughtput.high.cut * max);
+        },
         getRuleViolations: function() {
             this.$http.get('http://localhost:6060/reports/rule-violations')
             .then(response => {
                 this.rule_violations = JSON.parse(response.bodyText); 
                 this.violation_headers = Object.keys(JSON.parse(response.bodyText));
+                this.calculateDivisions(this.rule_violations);
             })
             .catch(error => {
                 console.log(error.statusText)
