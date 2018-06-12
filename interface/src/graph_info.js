@@ -1,14 +1,14 @@
 var Throughtput = {
     low: {
         cut:0.20,
-        factor:2
+        factor:1
     },
     medium: {
-        factor:2
+        factor:3
     },
     high: {
         cut:0.3,
-        factor:2
+        factor:6
     }
 }
 
@@ -26,12 +26,12 @@ var Criticality = {
 
 var ViolationTypes = {
     SIGNALING: {
-        dash:1, 
+        dash:0.2, 
         gap:2
     },
     RAISING: {
         dash:4, 
-        gap:2
+        gap:4
     },
     HANDLING: {
         dash:0,
